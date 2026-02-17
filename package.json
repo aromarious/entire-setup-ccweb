@@ -1,7 +1,7 @@
 {
   "name": "entire-setup-ccweb",
   "version": "0.1.2",
-  "description": "Auto-install Entire CLI on Claude Code Web for repos with entire enable already configured",
+  "description": "Auto-install and enable Entire CLI on Claude Code Web",
   "type": "module",
   "bin": {
     "entire-setup-ccweb": "bin/setup.mjs"
