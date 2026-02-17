@@ -29,7 +29,7 @@ git push
 
 - 対象リポジトリで `entire enable` が実行済みであること（`.claude/settings.json` に entire の hooks、`.entire/settings.json` が存在する状態）
 - このツールは entire のセットアップは行わない。ccweb 環境での以下を解決する:
-  - `entire` バイナリが無い問題（`go install` で自動インストール）
+  - `entire` バイナリが無い問題（GitHub Releases からプリビルドバイナリをダウンロード、SHA256 検証付き）
   - ccweb プロキシが現在のブランチ以外への push を制限する問題（`GITHUB_TOKEN` + `pushInsteadOf` で直接 GitHub に push し、pre-push フィルタで許可プレフィクスのみ通す）
 
 ## アーキテクチャ
@@ -45,7 +45,7 @@ git push
 
 `CLAUDE_CODE_REMOTE=true` の場合のみ動作。以下を順に実行:
 
-1. **Entire CLI インストール** — `go install` で entire バイナリをインストール（既にあればスキップ）
+1. **Entire CLI インストール** — GitHub Releases からプリビルドバイナリをダウンロード（SHA256 検証付き、既にあればスキップ）
 2. **直接 GitHub push アクセス設定** — `GITHUB_TOKEN` が設定されていれば、origin のプロキシ URL を検出し `pushInsteadOf` で直接 GitHub に向ける（push のみ。fetch はプロキシのまま）
 3. **pre-push フィルタ設置** — `.git/hooks/pre-push` に許可プレフィクスチェックを設置。その後 `entire enable` が走るとこのフックをバックアップしてチェーンする
 

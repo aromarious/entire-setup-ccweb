@@ -17,8 +17,50 @@ ALLOWED_PUSH_PREFIXES="entire/"
 
 # --- 1. Install Entire CLI ---
 if ! command -v entire >/dev/null 2>&1; then
-  echo "[setup-env] Installing entire CLI via go install" >&2
-  go install github.com/entireio/cli/cmd/entire@latest
+  echo "[setup-env] Installing entire CLI from GitHub Releases" >&2
+
+  # Detect platform
+  _os=$(uname -s | tr '[:upper:]' '[:lower:]')
+  _arch=$(uname -m)
+  case "$_arch" in
+    x86_64)  _arch="amd64" ;;
+    aarch64) _arch="arm64" ;;
+  esac
+  _asset="entire_${_os}_${_arch}.tar.gz"
+
+  # Resolve latest release tag
+  _auth_header=""
+  if [ -n "$GITHUB_TOKEN" ]; then
+    _auth_header="Authorization: token ${GITHUB_TOKEN}"
+  fi
+  _tag=$(curl -fsSL ${_auth_header:+-H "$_auth_header"} \
+    "https://api.github.com/repos/entireio/cli/releases/latest" \
+    | grep '"tag_name"' | sed 's/.*"tag_name": *"\([^"]*\)".*/\1/')
+
+  if [ -z "$_tag" ]; then
+    echo "[setup-env] ERROR: failed to resolve latest entire release" >&2
+    exit 1
+  fi
+
+  _base="https://github.com/entireio/cli/releases/download/${_tag}"
+  _tmp=$(mktemp -d)
+
+  # Download binary archive and checksums
+  curl -fsSL ${_auth_header:+-H "$_auth_header"} -o "${_tmp}/${_asset}" -L "${_base}/${_asset}"
+  curl -fsSL ${_auth_header:+-H "$_auth_header"} -o "${_tmp}/checksums.txt" -L "${_base}/checksums.txt"
+
+  # Verify SHA256
+  (cd "$_tmp" && grep "$_asset" checksums.txt | sha256sum -c -) >&2
+
+  # Extract and install
+  tar -xzf "${_tmp}/${_asset}" -C "$_tmp"
+  _install_dir="${GOPATH:-$HOME/go}/bin"
+  mkdir -p "$_install_dir"
+  mv "${_tmp}/entire" "$_install_dir/entire"
+  chmod +x "$_install_dir/entire"
+
+  rm -rf "$_tmp"
+  echo "[setup-env] Installed entire CLI ${_tag} to ${_install_dir}" >&2
 fi
 
 # --- 2. Configure direct GitHub push access (bypass proxy) ---

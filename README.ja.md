@@ -32,7 +32,7 @@ git push
 
 ### ccweb 環境の要件
 
-- **ネットワークアクセス**: 「信頼済み」(Trusted) 以上が必要（`go install` と GitHub push に必要）
+- **ネットワークアクセス**: 「信頼済み」(Trusted) 以上が必要（バイナリのダウンロードと GitHub push に必要）
 
 ### ccweb 環境変数の設定
 
@@ -69,7 +69,7 @@ git リポジトリルートを自動検出するため、サブディレクト�
 
 `CLAUDE_CODE_REMOTE=true` の場合のみ動作:
 
-1. **Entire CLI インストール** — `go install` でバイナリをインストール
+1. **Entire CLI インストール** — GitHub Releases からプリビルドバイナリをダウンロード（SHA256 チェックサム検証付き）
 2. **直接 GitHub push 設定** — `GITHUB_TOKEN` があれば `pushInsteadOf` でプロキシをバイパス（push のみ。fetch はプロキシ経由のまま）
 3. **pre-push フィルタ設置** — 許可されたプレフィクスのブランチのみ push を通す
 

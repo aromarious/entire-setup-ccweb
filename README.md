@@ -32,7 +32,7 @@ git push
 
 ### ccweb environment requirements
 
-- **Network access**: "Trusted" or higher is required (needed for `go install` and GitHub push)
+- **Network access**: "Trusted" or higher is required (needed for downloading binaries and GitHub push)
 
 ### Configure ccweb environment variables
 
@@ -69,7 +69,7 @@ Automatically detects the git repository root, so it works from any subdirectory
 
 Only runs when `CLAUDE_CODE_REMOTE=true`:
 
-1. **Install Entire CLI** — Installs the binary via `go install`
+1. **Install Entire CLI** — Downloads a pre-built binary from GitHub Releases with SHA256 checksum verification
 2. **Configure direct GitHub push** — If `GITHUB_TOKEN` is set, uses `pushInsteadOf` to bypass the proxy (push only; fetch stays proxied)
 3. **Install pre-push filter** — Only allows pushing branches matching allowed prefixes
 
