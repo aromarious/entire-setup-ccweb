@@ -61,6 +61,12 @@ if ! command -v entire >/dev/null 2>&1; then
 
   rm -rf "$_tmp"
   echo "[setup-env] Installed entire CLI ${_tag} to ${_install_dir}" >&2
+
+  # Enable entire if not already enabled (non-interactive)
+  if ! entire status 2>/dev/null | grep -q "^Enabled"; then
+    entire enable --agent claude-code
+    echo "[setup-env] Ran entire enable" >&2
+  fi
 fi
 
 # --- 2. Configure direct GitHub push access (bypass proxy) ---
