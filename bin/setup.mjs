@@ -99,14 +99,38 @@ function addSessionStartHook() {
 function createSetupScript() {
   const scriptsDir = join(projectDir, ".claude", "scripts");
   const scriptPath = join(scriptsDir, "setup-env.sh");
+  const templateContent = readFileSync(join(templatesDir, "setup-env.sh"), "utf8");
 
   if (existsSync(scriptPath)) {
-    log.skip("setup-env.sh already exists");
+    const existing = readFileSync(scriptPath, "utf8");
+
+    // Extract user-customized ALLOWED_PUSH_PREFIXES
+    const prefixMatch = existing.match(/^ALLOWED_PUSH_PREFIXES="([^"]*)"$/m);
+    const templatePrefixMatch = templateContent.match(/^ALLOWED_PUSH_PREFIXES="([^"]*)"$/m);
+
+    // Replace template's default with the user's value
+    let newContent = templateContent;
+    if (prefixMatch && templatePrefixMatch) {
+      newContent = templateContent.replace(templatePrefixMatch[0], prefixMatch[0]);
+    }
+
+    if (existing === newContent) {
+      log.skip("setup-env.sh is already up to date");
+      return;
+    }
+
+    writeFileSync(scriptPath, newContent);
+    chmodSync(scriptPath, 0o755);
+    if (prefixMatch && prefixMatch[1] !== templatePrefixMatch?.[1]) {
+      log.done(`Updated setup-env.sh (preserved ALLOWED_PUSH_PREFIXES="${prefixMatch[1]}")`);
+    } else {
+      log.done("Updated setup-env.sh");
+    }
     return;
   }
 
   ensureDir(scriptsDir);
-  writeFileSync(scriptPath, readFileSync(join(templatesDir, "setup-env.sh")));
+  writeFileSync(scriptPath, templateContent);
   chmodSync(scriptPath, 0o755);
   log.done("Created .claude/scripts/setup-env.sh");
 }
