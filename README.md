@@ -4,7 +4,7 @@
 
 Setup tool for using [Entire CLI](https://github.com/entireio/cli) on Claude Code Web (ccweb).
 
-Run once on a repository with `entire enable` already configured, and it will automatically install Entire CLI and set up direct GitHub push access on every ccweb session start.
+Run once on a repository and it will automatically install Entire CLI, enable it, and set up direct GitHub push access on every ccweb session start.
 
 > **Unofficial** community tool. Not part of the Entire CLI project.
 
@@ -18,17 +18,16 @@ When you open a repository configured with `entire enable` on ccweb, you'll run 
 ## Setup
 
 ```bash
-# 1. Enable Entire CLI (if not already done)
-entire enable
-
-# 2. Add ccweb setup
+# 1. Add ccweb setup
 npx entire-setup-ccweb
 
-# 3. Commit & push
+# 2. Commit & push
 git add .claude/
 git commit -m "Add ccweb setup for Entire CLI"
 git push
 ```
+
+If `entire enable` has already been run locally, it works immediately on ccweb. If not, `entire enable --agent claude-code` will be automatically run on the first ccweb session.
 
 ### ccweb environment requirements
 
@@ -70,8 +69,9 @@ Automatically detects the git repository root, so it works from any subdirectory
 Only runs when `CLAUDE_CODE_REMOTE=true`:
 
 1. **Install Entire CLI** — Downloads a pre-built binary from GitHub Releases with SHA256 checksum verification
-2. **Configure direct GitHub push** — If `GITHUB_TOKEN` is set, uses `pushInsteadOf` to bypass the proxy (push only; fetch stays proxied)
-3. **Install pre-push filter** — Only allows pushing branches matching allowed prefixes
+2. **Enable Entire CLI** — On first install, automatically runs `entire enable --agent claude-code` in non-interactive mode
+3. **Configure direct GitHub push** — If `GITHUB_TOKEN` is set, uses `pushInsteadOf` to bypass the proxy (push only; fetch stays proxied)
+4. **Install pre-push filter** — Only allows pushing branches matching allowed prefixes
 
 ## Push prefix configuration
 

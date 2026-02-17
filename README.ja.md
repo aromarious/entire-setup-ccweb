@@ -4,7 +4,7 @@
 
 [Entire CLI](https://github.com/entireio/cli) を Claude Code Web (ccweb) で使うためのセットアップツール。
 
-`entire enable` 済みのリポジトリに対して一度実行するだけで、ccweb セッション開始時に Entire CLI の自動インストールと GitHub 直接 push を設定します。
+リポジトリに対して一度実行するだけで、ccweb セッション開始時に Entire CLI の自動インストール・有効化と GitHub 直接 push を設定します。
 
 > **非公式**コミュニティツールです。Entire CLI プロジェクト自体の一部ではありません。
 
@@ -18,17 +18,16 @@
 ## セットアップ
 
 ```bash
-# 1. Entire CLI を有効化（まだなら）
-entire enable
-
-# 2. ccweb 用セットアップを追加
+# 1. ccweb 用セットアップを追加
 npx entire-setup-ccweb
 
-# 3. コミット＆プッシュ
+# 2. コミット＆プッシュ
 git add .claude/
 git commit -m "Add ccweb setup for Entire CLI"
 git push
 ```
+
+ローカルで `entire enable` 済みなら ccweb でも即座に動作します。未実行でも ccweb 初回セッションで `entire enable --agent claude-code` が自動実行されます。
 
 ### ccweb 環境の要件
 
@@ -70,8 +69,9 @@ git リポジトリルートを自動検出するため、サブディレクト�
 `CLAUDE_CODE_REMOTE=true` の場合のみ動作:
 
 1. **Entire CLI インストール** — GitHub Releases からプリビルドバイナリをダウンロード（SHA256 チェックサム検証付き）
-2. **直接 GitHub push 設定** — `GITHUB_TOKEN` があれば `pushInsteadOf` でプロキシをバイパス（push のみ。fetch はプロキシ経由のまま）
-3. **pre-push フィルタ設置** — 許可されたプレフィクスのブランチのみ push を通す
+2. **Entire CLI 有効化** — 初回インストール時、未 enable なら `entire enable --agent claude-code` を非対話モードで自動実行
+3. **直接 GitHub push 設定** — `GITHUB_TOKEN` があれば `pushInsteadOf` でプロキシをバイパス（push のみ。fetch はプロキシ経由のまま）
+4. **pre-push フィルタ設置** — 許可されたプレフィクスのブランチのみ push を通す
 
 ## push プレフィクスの設定
 
