@@ -6,6 +6,12 @@
   "bin": {
     "entire-setup-ccweb": "bin/setup.mjs"
   },
+  "scripts": {
+    "lint": "shellcheck templates/*.sh",
+    "commitlint": "commitlint --edit",
+    "prepublishOnly": "npm run lint",
+    "prepare": "lefthook install"
+  },
   "files": [
     "bin/",
     "templates/"
@@ -21,5 +27,10 @@
     "type": "git",
     "url": "git+https://github.com/aromarious/entire-setup-ccweb.git"
   },
-  "packageManager": "pnpm@9.15.0+sha512.76e2379760a4328ec4415815bcd6628dee727af3779aaa4c914e3944156c4299921a89f976381ee107d41f12cfa4b66681ca9c718f0668fa0831ed4c6d8ba56c"
+  "packageManager": "pnpm@9.15.0+sha512.76e2379760a4328ec4415815bcd6628dee727af3779aaa4c914e3944156c4299921a89f976381ee107d41f12cfa4b66681ca9c718f0668fa0831ed4c6d8ba56c",
+  "devDependencies": {
+    "@commitlint/cli": "^20.4.1",
+    "@commitlint/config-conventional": "^20.4.1",
+    "lefthook": "^2.1.1"
+  }
 }
