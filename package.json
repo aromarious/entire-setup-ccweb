@@ -10,7 +10,7 @@
     "lint": "shellcheck templates/*.sh",
     "commitlint": "commitlint --edit",
     "prepublishOnly": "npm run lint",
-    "postinstall": "lefthook install"
+    "prepare": "lefthook install"
   },
   "files": [
     "bin/",
