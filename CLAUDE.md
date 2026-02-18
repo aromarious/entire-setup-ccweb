@@ -69,6 +69,29 @@ pnpm lint
 pnpm commitlint
 ```
 
+## Git リモート構成
+
+- **origin**: 作業用フォーク (`entire-setup-ccweb-work`)。main の tracking 先。通常の push/pull はこちら
+- **upstream**: 本体リポジトリ (`entire-setup-ccweb`)。リリース時に push する
+
+### upstream への反映手順
+
+```bash
+# 1. main を upstream に push
+git push upstream main
+
+# 2. タグも push（リリース時。publish ワークフローはタグ push でトリガーされる）
+git push upstream v0.x.x
+```
+
+タグの付け直しが必要な場合:
+
+```bash
+git tag -d v0.x.x
+git tag -a v0.x.x -m "0.x.x"
+git push upstream v0.x.x --force
+```
+
 ## 設計方針
 
 - **非破壊的**: `.claude/settings.json` へはコマンド文字列の重複チェック付きで追加。`setup-env.sh` は再実行時に `ALLOWED_PUSH_PREFIXES` を保持しつつ更新
